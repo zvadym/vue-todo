@@ -1,7 +1,8 @@
-import Vue from "vue";
+import Vue from 'vue'
 
-import "./styles/quasar.styl";
-import "@quasar/extras/material-icons/material-icons.css";
+import '@/styles/quasar.styl'
+import '@quasar/extras/material-icons/material-icons.css'
+
 import {
   Quasar,
   QLayout,
@@ -16,8 +17,11 @@ import {
   QList,
   QItem,
   QItemSection,
-  QItemLabel
-} from "quasar";
+  QItemLabel,
+  QCard,
+  QCardSection,
+  QCardActions
+} from 'quasar'
 
 Vue.use(Quasar, {
   config: {},
@@ -34,8 +38,11 @@ Vue.use(Quasar, {
     QList,
     QItem,
     QItemSection,
-    QItemLabel
+    QItemLabel,
+    QCard,
+    QCardSection,
+    QCardActions
   },
   directives: {},
   plugins: {}
-});
+})

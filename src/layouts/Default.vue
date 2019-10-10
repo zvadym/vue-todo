@@ -11,9 +11,7 @@
           icon="menu"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-toolbar-title>Quasar App</q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
@@ -28,14 +26,6 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Home</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item to="/about" exact>
-          <q-item-section avatar>
-            <q-icon name="info" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>About</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -116,12 +106,12 @@
 
 <script>
 export default {
-  name: "LayoutDefault",
+  name: 'LayoutDefault',
 
   data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop
-    };
+    }
   }
-};
+}
 </script>
