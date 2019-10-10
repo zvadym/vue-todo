@@ -20,7 +20,9 @@ import {
   QItemLabel,
   QCard,
   QCardSection,
-  QCardActions
+  QCardActions,
+  QCheckbox,
+  QInput
 } from 'quasar'
 
 Vue.use(Quasar, {
@@ -41,7 +43,9 @@ Vue.use(Quasar, {
     QItemLabel,
     QCard,
     QCardSection,
-    QCardActions
+    QCardActions,
+    QCheckbox,
+    QInput
   },
   directives: {},
   plugins: {}
