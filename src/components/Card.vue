@@ -5,13 +5,28 @@
     </q-card-section>
     <q-list dense bordered padding>
       <q-item v-for="item in activeItems" :key="item.id">
-        <q-input borderless placeholder="Type label here" v-model="item.label">
+        <q-input
+          borderless
+          @input="
+            val => {
+              updateLabel(item.id, val)
+            }
+          "
+          :value="item.label"
+        >
           <template v-slot:prepend>
             <q-checkbox
-              v-model="item.done"
-              :val="item.id"
+              @input="changeStatus(item.id)"
+              :value="item.id"
               :checked="item.done"
             />
+          </template>
+        </q-input>
+      </q-item>
+      <q-item>
+        <q-input borderless placeholder="Add item" @change="addItem">
+          <template v-slot:prepend>
+            <q-checkbox disable :checked="false" value />
           </template>
         </q-input>
       </q-item>
@@ -19,7 +34,11 @@
     <q-list>
       <q-item v-for="item in doneItems" :key="item.id">
         <label>
-          <q-checkbox v-model="item.done" :val="item.id" :checked="item.done" />
+          <q-checkbox
+            @input="changeStatus(item.id)"
+            :value="item.id"
+            :checked="item.done"
+          />
           <del>{{ item.label }}</del>
         </label>
       </q-item>
@@ -28,20 +47,54 @@
 </template>
 
 <script>
-// import uniqueId from 'lodash-es/uniqueId'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Card',
   props: {
-    title: String,
-    items: Array
+    id: [String, Number]
+  },
+  data() {
+    return {}
   },
   computed: {
+    ...mapState({
+      title: () => 'Default',
+      items: state => state.items
+    }),
+
     activeItems: function() {
       return this.items.filter(item => !item.done)
     },
     doneItems: function() {
       return this.items.filter(item => item.done)
+    }
+  },
+  methods: {
+    ...mapActions({
+      storeAdd: 'addItem',
+      storeUpdate: 'updateItem'
+    }),
+    addItem: function(event) {
+      const itemValue = event.target.value
+      this.storeAdd({
+        label: itemValue,
+        done: false
+      })
+    },
+    updateLabel: function(id, value) {
+      const item = this.items.find(item => item.id === id)
+      this.storeUpdate({
+        ...item,
+        label: value
+      })
+    },
+    changeStatus: function(id) {
+      const item = this.items.find(item => item.id === id)
+      this.storeUpdate({
+        ...item,
+        done: !item.done
+      })
     }
   }
 }

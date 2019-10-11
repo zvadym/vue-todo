@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md row items-start q-gutter-md">
-      <Card :title="cardTitle" :items="items" />
+      <Card :id="1" />
     </div>
   </q-page>
 </template>
