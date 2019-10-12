@@ -21,6 +21,16 @@
               :checked="item.done"
             />
           </template>
+          <template v-slot:append>
+            <q-btn
+              round
+              dense
+              flat
+              size="xs"
+              icon="clear"
+              @click="deleteItem(item.id)"
+            />
+          </template>
         </q-input>
       </q-item>
       <q-item>
@@ -33,14 +43,23 @@
     </q-list>
     <q-list>
       <q-item v-for="item in doneItems" :key="item.id">
-        <label>
-          <q-checkbox
-            @input="changeStatus(item.id)"
-            :value="item.id"
-            :checked="item.done"
+        <q-item-section>
+          <label>
+            <q-checkbox @input="changeStatus(item.id)" :value="item.done" />
+            <del>{{ item.label }}</del>
+          </label>
+        </q-item-section>
+        <q-item-section side>
+          <q-btn
+            round
+            dense
+            flat
+            size="xs"
+            icon="clear"
+            class="float-right"
+            @click="deleteItem(item.id)"
           />
-          <del>{{ item.label }}</del>
-        </label>
+        </q-item-section>
       </q-item>
     </q-list>
   </q-card>
@@ -73,7 +92,8 @@ export default {
   methods: {
     ...mapActions({
       storeAdd: 'addItem',
-      storeUpdate: 'updateItem'
+      storeUpdate: 'updateItem',
+      storeDelete: 'deleteItem'
     }),
     addItem: function(event) {
       const itemValue = event.target.value
@@ -95,6 +115,9 @@ export default {
         ...item,
         done: !item.done
       })
+    },
+    deleteItem: function(id) {
+      this.storeDelete(this.items.find(item => item.id === id))
     }
   }
 }

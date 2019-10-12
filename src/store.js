@@ -7,12 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   strict: true,
   state: {
-    items: [
-      { id: uniqueId(), label: 'item #1', done: false },
-      { id: uniqueId(), label: 'item #2', done: false },
-      { id: uniqueId(), label: 'item #3', done: false },
-      { id: uniqueId(), label: 'item #4', done: true }
-    ]
+    items: []
   },
   getters: {},
   mutations: {
@@ -20,12 +15,14 @@ export default new Vuex.Store({
       state.items.push(payload)
     },
     updateItem(state, payload) {
-      console.log('updateItem mutation', payload)
       Vue.set(
         state.items,
         state.items.findIndex(x => x.id == payload.id),
         payload
       )
+    },
+    deleteItem(state, payload) {
+      state.items = state.items.filter(item => item.id !== payload.id)
     }
   },
   actions: {
@@ -34,6 +31,9 @@ export default new Vuex.Store({
     },
     addItem({ commit }, item) {
       commit('addItem', { ...item, id: uniqueId() })
+    },
+    deleteItem({ commit }, item) {
+      commit('deleteItem', item)
     }
   }
 })
