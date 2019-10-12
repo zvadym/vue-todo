@@ -8,16 +8,7 @@
       />
     </q-item-section>
     <q-item-section>
-      <q-input
-        v-if="!item.done"
-        borderless
-        @input="
-          val => {
-            updateLabel(val)
-          }
-        "
-        :value="item.label"
-      />
+      <q-input v-if="!item.done" borderless v-model="label" />
       <label v-else>
         <del>{{ item.label }}</del>
       </label>
@@ -34,10 +25,17 @@ export default {
   props: {
     item: [Object]
   },
+  computed: {
+    label: {
+      get() {
+        return this.item.label
+      },
+      set(value) {
+        this.$emit('updateLabel', this.item.id, value)
+      }
+    }
+  },
   methods: {
-    updateLabel(value) {
-      this.$emit('updateLabel', this.item.id, value)
-    },
     changeStatus() {
       this.$emit('updateStatus', this.item.id)
     },
