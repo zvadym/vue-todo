@@ -4,16 +4,26 @@
       <div class="text-h6">{{ title }}</div>
     </q-card-section>
     <q-list dense bordered padding>
-      <Item
-        v-for="item in activeItems"
-        :key="item.id"
-        :item="item"
-        @updateLabel="updateLabel"
-        @updateStatus="changeStatus"
-        @remove="deleteItem"
-      />
+      <draggable
+        v-model="activeItems"
+        handler=".drag"
+        animation="150"
+        ghost-class="ghost"
+      >
+        <Item
+          v-for="item in activeItems"
+          :key="item.id"
+          :item="item"
+          @updateLabel="updateLabel"
+          @updateStatus="changeStatus"
+          @remove="deleteItem"
+        />
+      </draggable>
 
       <q-item>
+        <q-item-section side>
+          <q-icon disable name="drag_indicator"></q-icon>
+        </q-item-section>
         <q-input borderless placeholder="Add item" @change="addItem">
           <template v-slot:prepend>
             <q-checkbox disable :checked="false" value />
@@ -36,6 +46,8 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import Item from '@/components/Item'
+import draggable from 'vuedraggable'
+import orderBy from 'lodash-es/orderBy'
 
 export default {
   name: 'Card',
@@ -43,7 +55,8 @@ export default {
     id: [String, Number]
   },
   components: {
-    Item
+    Item,
+    draggable
   },
   data() {
     return {}
@@ -54,8 +67,13 @@ export default {
       items: state => state.items
     }),
 
-    activeItems: function() {
-      return this.items.filter(item => !item.done)
+    activeItems: {
+      get() {
+        return orderBy(this.items.filter(item => !item.done), 'order', 'asc')
+      },
+      set(value) {
+        this.updateOrder(value.map(item => item.id))
+      }
     },
     doneItems: function() {
       return this.items.filter(item => item.done)
@@ -65,13 +83,13 @@ export default {
     ...mapActions({
       storeAdd: 'addItem',
       storeUpdate: 'updateItem',
-      storeDelete: 'deleteItem'
+      storeDelete: 'deleteItem',
+      updateOrder: 'updateOrder'
     }),
     addItem: function(event) {
       const itemValue = event.target.value
       this.storeAdd({
-        label: itemValue,
-        done: false
+        label: itemValue
       })
     },
     updateLabel: function(id, value) {
@@ -94,3 +112,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+</style>

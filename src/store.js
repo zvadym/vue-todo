@@ -12,7 +12,11 @@ export default new Vuex.Store({
   getters: {},
   mutations: {
     addItem(state, payload) {
-      state.items.push(payload)
+      state.items.push({
+        ...payload,
+        done: false,
+        order: this.state.items.length + 1
+      })
     },
     updateItem(state, payload) {
       Vue.set(
@@ -34,6 +38,14 @@ export default new Vuex.Store({
     },
     deleteItem({ commit }, item) {
       commit('deleteItem', item)
+    },
+    updateOrder({ commit }, ids) {
+      ids.forEach((itemId, index) => {
+        commit('updateItem', {
+          ...this.state.items.find(item => item.id === itemId),
+          order: index
+        })
+      })
     }
   }
 })

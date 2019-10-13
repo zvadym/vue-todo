@@ -1,6 +1,9 @@
 <template>
   <q-item>
-    <q-item-section avatar>
+    <q-item-section side>
+      <q-icon name="drag_indicator" class="drag"></q-icon>
+    </q-item-section>
+    <q-item-section side>
       <q-checkbox
         @input="changeStatus"
         :value="item.done"
