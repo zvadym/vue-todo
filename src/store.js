@@ -32,6 +32,9 @@ export default new Vuex.Store({
     },
     deleteItem(state, { card, itemData }) {
       card.items = card.items.filter(item => item.id !== itemData.id)
+    },
+    updateCard(state, card) {
+      Vue.set(state.cards, state.cards.findIndex(x => x.id == card.id), card)
     }
   },
   actions: {
@@ -53,7 +56,7 @@ export default new Vuex.Store({
     deleteItem({ commit }, { cardId, itemData }) {
       commit('deleteItem', { card: this.getters.getCardById(cardId), itemData })
     },
-    updateOrder({ commit }, { cardId, orderedIds }) {
+    updateItemsOrder({ commit }, { cardId, orderedIds }) {
       const card = this.getters.getCardById(cardId)
       orderedIds.forEach((itemId, index) => {
         commit('updateItem', {
@@ -64,6 +67,9 @@ export default new Vuex.Store({
           }
         })
       })
+    },
+    updateCard({ commit }, card) {
+      commit('updateCard', { ...card })
     }
   }
 })

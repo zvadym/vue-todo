@@ -1,7 +1,26 @@
 <template>
   <q-card bordered class="col-lg-4 col-md-4 col-sm-6">
     <q-card-section>
-      <div class="text-h6">{{ title }}</div>
+      <div class="card-title text-h6">
+        <span v-show="!editTitle">{{ title }}</span>
+        <q-btn
+          v-show="!editTitle"
+          flat
+          round
+          color="primary"
+          icon="edit"
+          size="sm"
+          class="btn-edit q-ml-sm"
+          @click="editTitle = true"
+        />
+        <q-input
+          v-show="editTitle"
+          v-model="title"
+          dense
+          @blur="editTitle = false"
+          @keypress.enter="editTitle = false"
+        />
+      </div>
     </q-card-section>
     <q-list dense bordered padding>
       <draggable
@@ -57,11 +76,18 @@ export default {
     draggable
   },
   data() {
-    return {}
+    return {
+      editTitle: false
+    }
   },
   computed: {
-    title: function() {
-      return this.cardData.title
+    title: {
+      get() {
+        return this.cardData.title
+      },
+      set(value) {
+        this.updateCardData({ ...this.cardData, title: value })
+      }
     },
     items: function() {
       return _.orderBy(this.cardData.items, 'order', 'asc')
@@ -86,7 +112,8 @@ export default {
       storeAdd: 'addItem',
       storeUpdate: 'updateItem',
       storeDelete: 'deleteItem',
-      updateOrder: 'updateOrder'
+      updateOrder: 'updateItemsOrder',
+      updateCardData: 'updateCard'
     }),
     addItem: function(event) {
       this.storeAdd({
@@ -132,5 +159,11 @@ export default {
 .ghost {
   opacity: 0.5;
   background: #c8ebfb;
+}
+.card-title .btn-edit {
+  display: none;
+}
+.card-title:hover .btn-edit {
+  display: inline-block;
 }
 </style>
