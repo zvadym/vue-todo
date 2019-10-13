@@ -33,6 +33,9 @@ export default new Vuex.Store({
     deleteItem(state, { card, itemData }) {
       card.items = card.items.filter(item => item.id !== itemData.id)
     },
+    addCard(state, card) {
+      state.cards.push(card)
+    },
     updateCard(state, card) {
       Vue.set(state.cards, state.cards.findIndex(x => x.id == card.id), card)
     }
@@ -66,6 +69,14 @@ export default new Vuex.Store({
             order: index
           }
         })
+      })
+    },
+    createCard({ commit }) {
+      commit('addCard', {
+        id: uniqueId(),
+        title: 'Default',
+        image: '',
+        items: []
       })
     },
     updateCard({ commit }, card) {
