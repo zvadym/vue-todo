@@ -7,43 +7,61 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   strict: true,
   state: {
-    items: []
+    cards: [
+      {
+        id: uniqueId(),
+        title: 'Default',
+        image: '',
+        items: []
+      }
+    ]
   },
-  getters: {},
+  getters: {
+    getCardById: state => id => state.cards.find(card => card.id === id)
+  },
   mutations: {
-    addItem(state, payload) {
-      state.items.push({
-        ...payload,
-        done: false,
-        order: this.state.items.length + 1
-      })
+    addItem(state, { card, itemData }) {
+      card.items.push(itemData)
     },
-    updateItem(state, payload) {
+    updateItem(state, { card, itemData }) {
       Vue.set(
-        state.items,
-        state.items.findIndex(x => x.id == payload.id),
-        payload
+        card.items,
+        card.items.findIndex(x => x.id == itemData.id),
+        itemData
       )
     },
-    deleteItem(state, payload) {
-      state.items = state.items.filter(item => item.id !== payload.id)
+    deleteItem(state, { card, itemData }) {
+      card.items = card.items.filter(item => item.id !== itemData.id)
     }
   },
   actions: {
-    updateItem({ commit }, item) {
-      commit('updateItem', item)
+    updateItem({ commit }, { cardId, itemData }) {
+      commit('updateItem', { card: this.getters.getCardById(cardId), itemData })
     },
-    addItem({ commit }, item) {
-      commit('addItem', { ...item, id: uniqueId() })
+    addItem({ commit }, { cardId, itemData }) {
+      const card = this.getters.getCardById(cardId)
+      commit('addItem', {
+        card,
+        itemData: {
+          ...itemData,
+          id: uniqueId(),
+          done: false,
+          order: card.items.length + 1
+        }
+      })
     },
-    deleteItem({ commit }, item) {
-      commit('deleteItem', item)
+    deleteItem({ commit }, { cardId, itemData }) {
+      commit('deleteItem', { card: this.getters.getCardById(cardId), itemData })
     },
-    updateOrder({ commit }, ids) {
-      ids.forEach((itemId, index) => {
+    updateOrder({ commit }, { cardId, orderedIds }) {
+      const card = this.getters.getCardById(cardId)
+      orderedIds.forEach((itemId, index) => {
         commit('updateItem', {
-          ...this.state.items.find(item => item.id === itemId),
-          order: index
+          card,
+          itemData: {
+            ...card.items.find(item => item.id === itemId),
+            order: index
+          }
         })
       })
     }

@@ -1,7 +1,8 @@
 <template>
   <q-item>
     <q-item-section side>
-      <q-icon name="drag_indicator" class="drag"></q-icon>
+      <q-icon v-if="!item.done" name="drag_indicator" class="drag" />
+      <div v-else class="q-mr-lg" />
     </q-item-section>
     <q-item-section side>
       <q-checkbox
@@ -48,3 +49,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.drag {
+  cursor: move;
+}
+</style>

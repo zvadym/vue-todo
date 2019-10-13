@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md row items-start q-gutter-md">
-      <Card :id="1" />
+      <Card v-for="card in cards" :cardData="card" :key="card.id" />
     </div>
   </q-page>
 </template>
@@ -17,13 +17,8 @@ export default {
   components: {
     Card
   },
-  data: function() {
-    return {
-      cardTitle: 'Default card'
-    }
-  },
   computed: {
-    ...mapState(['items'])
+    ...mapState(['cards'])
   }
 }
 </script>

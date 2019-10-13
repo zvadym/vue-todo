@@ -21,12 +21,10 @@
       </draggable>
 
       <q-item>
-        <q-item-section side>
-          <q-icon disable name="drag_indicator"></q-icon>
-        </q-item-section>
+        <q-item-section side>&nbsp;</q-item-section>
         <q-input borderless placeholder="Add item" @change="addItem">
           <template v-slot:prepend>
-            <q-checkbox disable :checked="false" value />
+            <q-icon disable name="add" class="q-ml-lg q-mr-sm" />
           </template>
         </q-input>
       </q-item>
@@ -44,15 +42,15 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 import Item from '@/components/Item'
 import draggable from 'vuedraggable'
-import orderBy from 'lodash-es/orderBy'
+import _ from 'lodash-es'
 
 export default {
   name: 'Card',
   props: {
-    id: [String, Number]
+    cardData: [Object]
   },
   components: {
     Item,
@@ -62,17 +60,21 @@ export default {
     return {}
   },
   computed: {
-    ...mapState({
-      title: () => 'Default',
-      items: state => state.items
-    }),
-
+    title: function() {
+      return this.cardData.title
+    },
+    items: function() {
+      return _.orderBy(this.cardData.items, 'order', 'asc')
+    },
     activeItems: {
       get() {
-        return orderBy(this.items.filter(item => !item.done), 'order', 'asc')
+        return this.items.filter(item => !item.done)
       },
       set(value) {
-        this.updateOrder(value.map(item => item.id))
+        this.updateOrder({
+          cardId: this.cardData.id,
+          orderedIds: value.map(item => item.id)
+        })
       }
     },
     doneItems: function() {
@@ -87,27 +89,40 @@ export default {
       updateOrder: 'updateOrder'
     }),
     addItem: function(event) {
-      const itemValue = event.target.value
       this.storeAdd({
-        label: itemValue
+        cardId: this.cardData.id,
+        itemData: {
+          label: event.target.value
+        }
       })
     },
     updateLabel: function(id, value) {
       const item = this.items.find(item => item.id === id)
       this.storeUpdate({
-        ...item,
-        label: value
+        cardId: this.cardData.id,
+        itemData: {
+          ...item,
+          label: value
+        }
       })
     },
     changeStatus: function(id) {
       const item = this.items.find(item => item.id === id)
+      const lastItem = _.last(item.done ? this.activeItems : this.doneItems)
       this.storeUpdate({
-        ...item,
-        done: !item.done
+        cardId: this.cardData.id,
+        itemData: {
+          ...item,
+          done: !item.done,
+          order: lastItem ? lastItem.order + 1 : 1
+        }
       })
     },
     deleteItem: function(id) {
-      this.storeDelete(this.items.find(item => item.id === id))
+      this.storeDelete({
+        cardId: this.cardData.id,
+        itemData: this.items.find(item => item.id === id)
+      })
     }
   }
 }
