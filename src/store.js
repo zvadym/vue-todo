@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersistence from 'vuex-persist'
 import uniqueId from 'lodash-es/uniqueId'
 
 Vue.use(Vuex)
+
+const vuexLocal = new VuexPersistence({
+  key: 'vue-todo',
+  storage: window.localStorage
+})
 
 export default new Vuex.Store({
   strict: true,
@@ -82,5 +88,6 @@ export default new Vuex.Store({
     updateCard({ commit }, card) {
       commit('updateCard', { ...card })
     }
-  }
+  },
+  plugins: [vuexLocal.plugin]
 })
