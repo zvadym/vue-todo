@@ -13,6 +13,7 @@ const vuexLocal = new VuexPersistence({
 export default new Vuex.Store({
   strict: true,
   state: {
+    user: null,
     cards: [
       {
         id: uniqueId(),
@@ -23,7 +24,8 @@ export default new Vuex.Store({
     ]
   },
   getters: {
-    getCardById: state => id => state.cards.find(card => card.id === id)
+    getCardById: state => id => state.cards.find(card => card.id === id),
+    user: state => state.user
   },
   mutations: {
     addItem(state, { card, itemData }) {
@@ -44,6 +46,9 @@ export default new Vuex.Store({
     },
     updateCard(state, card) {
       Vue.set(state.cards, state.cards.findIndex(x => x.id == card.id), card)
+    },
+    setUser(state, user) {
+      state.user = user
     }
   },
   actions: {
@@ -87,6 +92,18 @@ export default new Vuex.Store({
     },
     updateCard({ commit }, card) {
       commit('updateCard', { ...card })
+    },
+    setUser({ commit }, userData) {
+      commit(
+        'setUser',
+        userData
+          ? {
+              uid: userData.uid,
+              name: userData.displayName,
+              email: userData.email
+            }
+          : null
+      )
     }
   },
   plugins: [vuexLocal.plugin]
