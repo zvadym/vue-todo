@@ -1,5 +1,5 @@
 <template>
-  <q-card bordered class="col-lg-4 col-md-4 col-sm-6">
+  <q-card bordered class="col-md-5 col-sm-11">
     <q-card-section>
       <div class="card-title text-h6">
         <span v-show="!editTitle">{{ title }}</span>

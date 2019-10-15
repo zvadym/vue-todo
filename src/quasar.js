@@ -22,7 +22,10 @@ import {
   QCardSection,
   QCardActions,
   QCheckbox,
-  QInput
+  QInput,
+  QMenu,
+  ClosePopup,
+  QSeparator
 } from 'quasar'
 
 Vue.use(Quasar, {
@@ -45,8 +48,12 @@ Vue.use(Quasar, {
     QCardSection,
     QCardActions,
     QCheckbox,
-    QInput
+    QInput,
+    QMenu,
+    QSeparator
   },
-  directives: {},
+  directives: {
+    ClosePopup
+  },
   plugins: {}
 })
