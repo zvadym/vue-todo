@@ -29,7 +29,8 @@ export const firebaseActions = {
   firebaseBindCards: firestoreAction(({ bindFirestoreRef, getters }) => {
     return bindFirestoreRef(
       'cards',
-      // get only user's cards
+      // Get only user's cards
+      // TODO: refactor it => Firebase access rules must be used here.
       cardsRef.where('owner', '==', getters.user.uid)
     )
   })

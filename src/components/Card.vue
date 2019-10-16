@@ -1,25 +1,38 @@
 <template>
   <q-card bordered class="col-md-5 col-sm-11">
     <q-card-section>
-      <div class="card-title text-h6">
-        <span v-show="!editTitle">{{ title }}</span>
-        <q-btn
-          v-show="!editTitle"
-          flat
-          round
-          color="primary"
-          icon="edit"
-          size="sm"
-          class="btn-edit q-ml-sm"
-          @click="editTitle = true"
-        />
-        <q-input
-          v-show="editTitle"
-          v-model="title"
-          dense
-          @blur="editTitle = false"
-          @keypress.enter="editTitle = false"
-        />
+      <div class="row items-center no-wrap">
+        <div class="card-title text-h6 col">
+          <span v-show="!editTitle">{{ title }}</span>
+          <q-btn
+            v-show="!editTitle"
+            flat
+            round
+            color="primary"
+            icon="edit"
+            size="sm"
+            class="btn-edit q-ml-sm"
+            @click="editTitle = true"
+          />
+          <q-input
+            v-show="editTitle"
+            v-model="title"
+            dense
+            @blur="editTitle = false"
+            @keypress.enter="editTitle = false"
+          />
+        </div>
+        <div class="col-auto">
+          <q-btn color="grey-7" round flat icon="more_vert">
+            <q-menu cover auto-close>
+              <q-list>
+                <q-item clickable @click="removeCard(cardData.id)">
+                  <q-item-section>Remove Card</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </div>
       </div>
     </q-card-section>
     <q-list dense bordered padding>
@@ -33,8 +46,8 @@
           v-for="item in activeItems"
           :key="item.id"
           :item="item"
-          @updateLabel="updateLabel"
-          @updateStatus="changeStatus"
+          @updateLabel="updateItemLabel"
+          @updateStatus="changeItemStatus"
           @remove="deleteItem"
         />
       </draggable>
@@ -53,7 +66,7 @@
         v-for="item in doneItems"
         :key="item.id"
         :item="item"
-        @updateStatus="changeStatus"
+        @updateStatus="changeItemStatus"
         @remove="deleteItem"
       />
     </q-list>
@@ -77,7 +90,8 @@ export default {
   },
   data() {
     return {
-      editTitle: false
+      editTitle: false,
+      newTitle: ''
     }
   },
   computed: {
@@ -86,7 +100,7 @@ export default {
         return this.cardData.title
       },
       set(value) {
-        this.updateCardData({ ...this.cardData, title: value })
+        this.newTitle = value
       }
     },
     items: function() {
@@ -107,13 +121,21 @@ export default {
       return this.items.filter(item => item.done)
     }
   },
+  watch: {
+    editTitle: function(isEditMode) {
+      if (!isEditMode) {
+        this.updateCardData({ ...this.cardData, title: this.newTitle })
+      }
+    }
+  },
   methods: {
     ...mapActions({
       storeAdd: 'addItem',
       storeUpdate: 'updateItem',
       storeDelete: 'deleteItem',
       updateOrder: 'updateItemsOrder',
-      updateCardData: 'updateCard'
+      updateCardData: 'updateCard',
+      removeCard: 'removeCard'
     }),
     addItem: function(event) {
       this.storeAdd({
@@ -123,7 +145,7 @@ export default {
         }
       })
     },
-    updateLabel: function(id, value) {
+    updateItemLabel: function(id, value) {
       const item = this.items.find(item => item.id === id)
       this.storeUpdate({
         cardId: this.cardData.id,
@@ -133,7 +155,7 @@ export default {
         }
       })
     },
-    changeStatus: function(id) {
+    changeItemStatus: function(id) {
       const item = this.items.find(item => item.id === id)
       const lastItem = _.last(item.done ? this.activeItems : this.doneItems)
       this.storeUpdate({

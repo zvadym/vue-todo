@@ -7,6 +7,7 @@ import {
   DELETE_ITEM,
   ADD_CARD,
   UPDATE_CARD,
+  DELETE_CARD,
   SET_USER
 } from './mutations'
 
@@ -62,6 +63,10 @@ export default {
   updateCard({ commit, dispatch }, card) {
     commit(UPDATE_CARD, { ...card })
     dispatch('firebaseSetCard', { card })
+  },
+  removeCard({ commit, dispatch }, cardId) {
+    commit(DELETE_CARD, cardId)
+    dispatch('firebaseDeleteCard', { cardId })
   },
   setUser({ commit }, userData) {
     commit(
