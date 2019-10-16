@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
-import uniqueId from 'lodash-es/uniqueId'
+import { vuexfireMutations, firestoreAction } from 'vuexfire'
+
+import uniqueId from '@/unique-id'
+import { db } from '@/services/firebase'
 
 Vue.use(Vuex)
 
@@ -14,20 +17,14 @@ export default new Vuex.Store({
   strict: true,
   state: {
     user: null,
-    cards: [
-      {
-        id: uniqueId(),
-        title: 'Default',
-        image: '',
-        items: []
-      }
-    ]
+    cards: []
   },
   getters: {
     getCardById: state => id => state.cards.find(card => card.id === id),
     user: state => state.user
   },
   mutations: {
+    ...vuexfireMutations,
     addItem(state, { card, itemData }) {
       card.items.push(itemData)
     },
@@ -86,7 +83,7 @@ export default new Vuex.Store({
       commit('addCard', {
         id: uniqueId(),
         title: 'Default',
-        image: '',
+        owner: this.getters.user.uid,
         items: []
       })
     },
@@ -104,7 +101,13 @@ export default new Vuex.Store({
             }
           : null
       )
-    }
+    },
+    bindCards: firestoreAction(({ bindFirestoreRef, getters }) => {
+      return bindFirestoreRef(
+        'cards',
+        db.collection('cards').where('owner', '==', getters.user.uid)
+      )
+    })
   },
   plugins: [vuexLocal.plugin]
 })

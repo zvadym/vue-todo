@@ -20,7 +20,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import firebase from 'firebase/app'
+import firebase from '@/services/firebase'
 
 export default {
   computed: {

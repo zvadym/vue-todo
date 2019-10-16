@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
+import firebase from '@/services/firebase'
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { mapActions } from 'vuex'
