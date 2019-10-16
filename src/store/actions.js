@@ -1,6 +1,5 @@
-import uniqueId from '@/unique-id'
 import { firebaseActions } from '@/services/firebase'
-
+import { CardModel, ItemModel } from './models'
 import {
   ADD_ITEM,
   UPDATE_ITEM,
@@ -24,10 +23,10 @@ export default {
     commit(ADD_ITEM, {
       card,
       itemData: {
-        ...itemData,
-        id: uniqueId(),
-        done: false,
-        order: card.items.length + 1
+        ...new ItemModel({
+          ...itemData,
+          order: card.items.length + 1
+        })
       }
     })
     dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
@@ -52,10 +51,9 @@ export default {
   },
   createCard({ commit, getters, dispatch }) {
     const card = {
-      id: uniqueId(),
-      title: 'Default',
-      owner: getters.user.uid,
-      items: []
+      ...new CardModel({
+        owner: getters.user.uid
+      })
     }
     commit(ADD_CARD, card)
     dispatch('firebaseSetCard', { card })
