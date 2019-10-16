@@ -30,15 +30,15 @@ export default {
     ...mapState(['cards'])
   },
   methods: {
-    ...mapActions(['createCard', 'bindCards'])
+    ...mapActions(['createCard', 'firebaseBindCards'])
   },
   mounted: function() {
-    this.bindCards() // firebase sync
-
-    if (!this.cards.length) {
-      // Create first card
-      this.createCard()
-    }
+    // firebase sync
+    this.firebaseBindCards().then(() => {
+      if (this.cards.length === 0) {
+        this.createCard()
+      }
+    })
   }
 }
 </script>

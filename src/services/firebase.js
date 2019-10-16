@@ -1,6 +1,8 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
+import { firestoreAction } from 'vuexfire'
+
 const firebaseConfig = {
   apiKey: 'AIzaSyAzU-B-2KGjnCeGIgX9dviHS_7LHjjWB38',
   authDomain: 'zvadym-vue-todo.firebaseapp.com',
@@ -15,3 +17,20 @@ firebase.initializeApp(firebaseConfig)
 
 export default firebase
 export const db = firebase.firestore()
+export const cardsRef = db.collection('cards')
+
+export const firebaseActions = {
+  firebaseSetCard: firestoreAction((context, { card }) => {
+    return cardsRef.doc(card.id).set(card)
+  }),
+  firebaseDeleteCard: firestoreAction((context, { cardId }) => {
+    return cardsRef.doc(cardId).delete()
+  }),
+  firebaseBindCards: firestoreAction(({ bindFirestoreRef, getters }) => {
+    return bindFirestoreRef(
+      'cards',
+      // get only user's cards
+      cardsRef.where('owner', '==', getters.user.uid)
+    )
+  })
+}

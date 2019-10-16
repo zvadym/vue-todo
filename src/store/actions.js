@@ -1,7 +1,5 @@
-import { firestoreAction } from 'vuexfire'
-
 import uniqueId from '@/unique-id'
-import { db } from '@/services/firebase'
+import { firebaseActions } from '@/services/firebase'
 
 import {
   ADD_ITEM,
@@ -13,11 +11,15 @@ import {
 } from './mutations'
 
 export default {
-  updateItem({ commit }, { cardId, itemData }) {
-    commit(UPDATE_ITEM, { card: this.getters.getCardById(cardId), itemData })
+  ...firebaseActions,
+  updateItem({ commit, getters, dispatch }, { cardId, itemData }) {
+    commit(UPDATE_ITEM, { card: getters.getCardById(cardId), itemData })
+
+    // Update firebase with last card data
+    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
   },
-  addItem({ commit }, { cardId, itemData }) {
-    const card = this.getters.getCardById(cardId)
+  addItem({ commit, getters, dispatch }, { cardId, itemData }) {
+    const card = getters.getCardById(cardId)
     commit(ADD_ITEM, {
       card,
       itemData: {
@@ -27,12 +29,14 @@ export default {
         order: card.items.length + 1
       }
     })
+    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
   },
-  deleteItem({ commit }, { cardId, itemData }) {
-    commit(DELETE_ITEM, { card: this.getters.getCardById(cardId), itemData })
+  deleteItem({ commit, getters, dispatch }, { cardId, itemData }) {
+    commit(DELETE_ITEM, { card: getters.getCardById(cardId), itemData })
+    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
   },
-  updateItemsOrder({ commit }, { cardId, orderedIds }) {
-    const card = this.getters.getCardById(cardId)
+  updateItemsOrder({ commit, getters, dispatch }, { cardId, orderedIds }) {
+    const card = getters.getCardById(cardId)
     orderedIds.forEach((itemId, index) => {
       commit(UPDATE_ITEM, {
         card,
@@ -42,17 +46,22 @@ export default {
         }
       })
     })
+
+    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
   },
-  createCard({ commit }) {
-    commit(ADD_CARD, {
+  createCard({ commit, getters, dispatch }) {
+    const card = {
       id: uniqueId(),
       title: 'Default',
-      owner: this.getters.user.uid,
+      owner: getters.user.uid,
       items: []
-    })
+    }
+    commit(ADD_CARD, card)
+    dispatch('firebaseSetCard', { card })
   },
-  updateCard({ commit }, card) {
+  updateCard({ commit, dispatch }, card) {
     commit(UPDATE_CARD, { ...card })
+    dispatch('firebaseSetCard', { card })
   },
   setUser({ commit }, userData) {
     commit(
@@ -65,12 +74,5 @@ export default {
           }
         : null
     )
-  },
-  bindCards: firestoreAction(({ bindFirestoreRef, getters }) => {
-    return bindFirestoreRef(
-      'cards',
-      // get only user's cards
-      db.collection('cards').where('owner', '==', getters.user.uid)
-    )
-  })
+  }
 }

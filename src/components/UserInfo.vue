@@ -1,6 +1,6 @@
 <template>
   <div v-if="user">
-    <q-btn round color="indigo" glossy icon="wc" />
+    <q-btn round color glossy icon="person" />
     <q-menu transition-show="flip-right" transition-hide="flip-left">
       <q-list style="min-width: 120px">
         <q-item>
