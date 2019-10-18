@@ -38,7 +38,7 @@
     <q-list dense bordered padding>
       <draggable
         v-model="activeItems"
-        handler=".drag"
+        handle=".drag"
         animation="150"
         ghost-class="ghost"
       >
@@ -46,7 +46,7 @@
           v-for="item in activeItems"
           :key="item.id"
           :item="item"
-          @updateLabel="updateItemLabel"
+          @updateTitle="updateItemTitle"
           @updateStatus="changeItemStatus"
           @remove="deleteItem"
         />
@@ -141,17 +141,17 @@ export default {
       this.storeAdd({
         cardId: this.cardData.id,
         itemData: {
-          label: event.target.value
+          title: event.target.value
         }
       })
     },
-    updateItemLabel: function(id, value) {
+    updateItemTitle: function(id, value) {
       const item = this.items.find(item => item.id === id)
       this.storeUpdate({
         cardId: this.cardData.id,
         itemData: {
           ...item,
-          label: value
+          title: value
         }
       })
     },

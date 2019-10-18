@@ -43,13 +43,13 @@ export class CardModel extends BaseModel {
 
 export class ItemModel extends BaseModel {
   fields() {
-    return ['id', 'label', 'done', 'order']
+    return ['id', 'title', 'done', 'order']
   }
 
   defaults() {
     return {
       id: this.guid(),
-      label: '...',
+      title: '...',
       done: false,
       order: 1
     }

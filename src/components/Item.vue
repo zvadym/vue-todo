@@ -12,9 +12,9 @@
       />
     </q-item-section>
     <q-item-section>
-      <q-input v-if="!item.done" borderless v-model="label" />
+      <q-input v-if="!item.done" borderless v-model="title" />
       <label v-else>
-        <del>{{ item.label }}</del>
+        <del>{{ item.title }}</del>
       </label>
     </q-item-section>
     <q-item-section side>
@@ -30,12 +30,12 @@ export default {
     item: [Object]
   },
   computed: {
-    label: {
+    title: {
       get() {
-        return this.item.label
+        return this.item.title
       },
       set(value) {
-        this.$emit('updateLabel', this.item.id, value)
+        this.$emit('updateTitle', this.item.id, value)
       }
     }
   },
