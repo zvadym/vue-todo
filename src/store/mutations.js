@@ -11,21 +11,8 @@ export const DELETE_CARD = 'DELETE_CARD'
 
 export const SET_USER = 'SET_USER'
 
-export default {
-  ...vuexfireMutations,
-  [ADD_ITEM](state, { card, itemData }) {
-    card.items.push(itemData)
-  },
-  [UPDATE_ITEM](state, { card, itemData }) {
-    Vue.set(
-      card.items,
-      card.items.findIndex(x => x.id == itemData.id),
-      itemData
-    )
-  },
-  [DELETE_ITEM](state, { card, itemData }) {
-    card.items = card.items.filter(item => item.id !== itemData.id)
-  },
+// eslint-disable-next-line
+const cardMutations = {
   [ADD_CARD](state, card) {
     state.cards.push(card)
   },
@@ -34,7 +21,27 @@ export default {
   },
   [DELETE_CARD](state, id) {
     state.cards = state.cards.filter(item => item.id !== id)
+  }
+}
+
+// eslint-disable-next-line
+const itemMutations = {
+  [ADD_ITEM](state, { card, item }) {
+    card.items.push(item)
   },
+  [UPDATE_ITEM](state, { card, item }) {
+    Vue.set(card.items, card.items.findIndex(x => x.id == item.id), item)
+  },
+  [DELETE_ITEM](state, { card, item }) {
+    card.items = card.items.filter(o => o.id !== item.id)
+  }
+}
+
+export default {
+  ...vuexfireMutations,
+  // All card/item migrations are switched off. Vuexfire used instead
+  // ...cardMutations,
+  // ...itemMutations,
   [SET_USER](state, user) {
     state.user = user
   }

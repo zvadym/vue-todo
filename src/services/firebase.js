@@ -1,7 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
-
 import { firestoreAction } from 'vuexfire'
+import { CardModel, ItemModel } from '@/store/models'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAzU-B-2KGjnCeGIgX9dviHS_7LHjjWB38',
@@ -20,7 +20,7 @@ export const db = firebase.firestore()
 export const cardsRef = db.collection('cards')
 
 export const firebaseActions = {
-  firebaseSetCard: firestoreAction((context, { card }) => {
+  firebaseUpdateCard: firestoreAction((context, { card }) => {
     return cardsRef.doc(card.id).set(card)
   }),
   firebaseDeleteCard: firestoreAction((context, { cardId }) => {
@@ -30,8 +30,23 @@ export const firebaseActions = {
     return bindFirestoreRef(
       'cards',
       // Get only user's cards
-      // TODO: refactor it => Firebase access rules must be used here.
-      cardsRef.where('owner', '==', getters.user.uid)
+      cardsRef.where('owner', '==', getters.user.uid),
+      {
+        serialize: snapshot => {
+          // Wrap data into CardModel to set all required fields
+          const data = snapshot.data()
+          return {
+            ...new CardModel({
+              ...data,
+              id: snapshot.id,
+              items: data.items.map(item => {
+                return { ...new ItemModel({ ...item }) }
+              })
+            })
+          }
+        },
+        reset: false
+      }
     )
   })
 }

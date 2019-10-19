@@ -1,71 +1,58 @@
+import Vue from 'vue'
 import { firebaseActions } from '@/services/firebase'
 import { CardModel, ItemModel } from './models'
-import {
-  ADD_ITEM,
-  UPDATE_ITEM,
-  DELETE_ITEM,
-  ADD_CARD,
-  UPDATE_CARD,
-  DELETE_CARD,
-  SET_USER
-} from './mutations'
+import { SET_USER } from './mutations'
 
-export default {
-  ...firebaseActions,
-  updateItem({ commit, getters, dispatch }, { cardId, itemData }) {
-    commit(UPDATE_ITEM, { card: getters.getCardById(cardId), itemData })
-
-    // Update firebase with last card data
-    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
-  },
-  addItem({ commit, getters, dispatch }, { cardId, itemData }) {
-    const card = getters.getCardById(cardId)
-    commit(ADD_ITEM, {
-      card,
-      itemData: {
-        ...new ItemModel({
-          ...itemData,
-          order: card.items.length + 1
-        })
-      }
-    })
-    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
-  },
-  deleteItem({ commit, getters, dispatch }, { cardId, itemData }) {
-    commit(DELETE_ITEM, { card: getters.getCardById(cardId), itemData })
-    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
-  },
-  updateItemsOrder({ commit, getters, dispatch }, { cardId, orderedIds }) {
-    const card = getters.getCardById(cardId)
-    orderedIds.forEach((itemId, index) => {
-      commit(UPDATE_ITEM, {
-        card,
-        itemData: {
-          ...card.items.find(item => item.id === itemId),
-          order: index
-        }
-      })
-    })
-
-    dispatch('firebaseSetCard', { card: getters.getCardById(cardId) })
-  },
-  createCard({ commit, getters, dispatch }) {
+const cardActions = {
+  createCard({ getters, dispatch }) {
     const card = {
       ...new CardModel({
         owner: getters.user.uid
       })
     }
-    commit(ADD_CARD, card)
-    dispatch('firebaseSetCard', { card })
+    dispatch('firebaseUpdateCard', { card })
   },
-  updateCard({ commit, dispatch }, card) {
-    commit(UPDATE_CARD, { ...card })
-    dispatch('firebaseSetCard', { card })
+  updateCard({ dispatch }, card) {
+    dispatch('firebaseUpdateCard', { card })
   },
-  removeCard({ commit, dispatch }, cardId) {
-    commit(DELETE_CARD, cardId)
+  removeCard({ dispatch }, cardId) {
     dispatch('firebaseDeleteCard', { cardId })
+  }
+}
+
+const itemActions = {
+  addItem({ dispatch }, { card, itemData }) {
+    card.items.push({
+      ...new ItemModel({
+        ...itemData,
+        order: card.items.length + 1
+      })
+    })
+    dispatch('firebaseUpdateCard', { card })
   },
+  updateItem({ dispatch }, { card, item }) {
+    Vue.set(card.items, card.items.findIndex(x => x.id == item.id), item)
+    dispatch('firebaseUpdateCard', { card })
+  },
+  updateItemsOrder({ dispatch }, { card, orderedIds }) {
+    card.items = card.items.map(item => {
+      return {
+        ...item,
+        order: orderedIds.indexOf(item.id)
+      }
+    })
+    dispatch('firebaseUpdateCard', { card })
+  },
+  deleteItem({ dispatch }, { card, deleteItemId }) {
+    card.items = card.items.filter(o => o.id !== deleteItemId)
+    dispatch('firebaseUpdateCard', { card })
+  }
+}
+
+export default {
+  ...firebaseActions,
+  ...cardActions,
+  ...itemActions,
   setUser({ commit }, userData) {
     commit(
       SET_USER,

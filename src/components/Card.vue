@@ -112,7 +112,7 @@ export default {
       },
       set(value) {
         this.updateOrder({
-          cardId: this.cardData.id,
+          card: _.cloneDeep(this.cardData),
           orderedIds: value.map(item => item.id)
         })
       }
@@ -139,18 +139,17 @@ export default {
     }),
     addItem: function(event) {
       this.storeAdd({
-        cardId: this.cardData.id,
+        card: _.cloneDeep(this.cardData),
         itemData: {
           title: event.target.value
         }
       })
     },
     updateItemTitle: function(id, value) {
-      const item = this.items.find(item => item.id === id)
       this.storeUpdate({
-        cardId: this.cardData.id,
-        itemData: {
-          ...item,
+        card: _.cloneDeep(this.cardData),
+        item: {
+          ...this.items.find(item => item.id === id),
           title: value
         }
       })
@@ -159,8 +158,8 @@ export default {
       const item = this.items.find(item => item.id === id)
       const lastItem = _.last(item.done ? this.activeItems : this.doneItems)
       this.storeUpdate({
-        cardId: this.cardData.id,
-        itemData: {
+        card: _.cloneDeep(this.cardData),
+        item: {
           ...item,
           done: !item.done,
           order: lastItem ? lastItem.order + 1 : 1
@@ -169,8 +168,8 @@ export default {
     },
     deleteItem: function(id) {
       this.storeDelete({
-        cardId: this.cardData.id,
-        itemData: this.items.find(item => item.id === id)
+        card: _.cloneDeep(this.cardData),
+        deleteItemId: id
       })
     }
   }
