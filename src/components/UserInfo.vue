@@ -20,14 +20,14 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import firebase from '@/services/firebase'
+import firebase from '@/services/firebase/index'
 
 export default {
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters({ user: 'users/user' })
   },
   methods: {
-    ...mapActions(['setUser']),
+    ...mapActions({ setUser: 'users/setUser' }),
     signOut() {
       firebase.auth().signOut()
       this.setUser(null)

@@ -1,4 +1,4 @@
-import uniqueId from '@/unique-id'
+import uniqueId from '@/utils/unique-id'
 
 class BaseModel {
   constructor(data) {
@@ -33,7 +33,7 @@ export class CardModel extends BaseModel {
   defaults() {
     return {
       id: this.guid(),
-      title: 'TODO list',
+      title: 'New TODO',
       owner: null,
       items: [],
       createdAt: Date.now()

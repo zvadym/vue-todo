@@ -1,13 +1,12 @@
 import Vue from 'vue'
-import { firebaseActions } from '@/services/firebase'
 import { CardModel, ItemModel } from './models'
-import { SET_USER } from './mutations'
+import firebaseActions from '@/services/firebase/actions'
 
 const cardActions = {
-  createCard({ getters, dispatch }) {
+  createCard({ rootGetters, dispatch }) {
     const card = {
       ...new CardModel({
-        owner: getters.user.uid
+        owner: rootGetters['users/user'].uid
       })
     }
     dispatch('firebaseUpdateCard', { card })
@@ -15,8 +14,8 @@ const cardActions = {
   updateCard({ dispatch }, card) {
     dispatch('firebaseUpdateCard', { card })
   },
-  removeCard({ dispatch }, cardId) {
-    dispatch('firebaseDeleteCard', { cardId })
+  removeCard({ dispatch }, card) {
+    dispatch('firebaseDeleteCard', { card })
   }
 }
 
@@ -52,17 +51,5 @@ const itemActions = {
 export default {
   ...firebaseActions,
   ...cardActions,
-  ...itemActions,
-  setUser({ commit }, userData) {
-    commit(
-      SET_USER,
-      userData
-        ? {
-            uid: userData.uid,
-            name: userData.displayName,
-            email: userData.email
-          }
-        : null
-    )
-  }
+  ...itemActions
 }

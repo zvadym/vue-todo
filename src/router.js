@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import DefaultLayout from '@/layouts/Default.vue'
 import Board from '@/views/Board.vue'
 import Login from '@/views/Login.vue'
-import firebase from '@/services/firebase'
+import firebase from '@/services/firebase/index'
 
 Vue.use(Router)
 

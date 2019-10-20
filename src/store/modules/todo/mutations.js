@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { vuexfireMutations } from 'vuexfire'
 
 export const ADD_ITEM = 'ADD_ITEM'
 export const UPDATE_ITEM = 'UPDATE_ITEM'
@@ -8,8 +7,6 @@ export const DELETE_ITEM = 'DELETE_ITEM'
 export const ADD_CARD = 'ADD_CARD'
 export const UPDATE_CARD = 'UPDATE_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
-
-export const SET_USER = 'SET_USER'
 
 // eslint-disable-next-line
 const cardMutations = {
@@ -38,11 +35,8 @@ const itemMutations = {
 }
 
 export default {
-  ...vuexfireMutations,
-  // All card/item migrations are switched off. Vuexfire used instead
+  // All card/item mutations are switched off.
+  // Vuexfire used instead
   // ...cardMutations,
   // ...itemMutations,
-  [SET_USER](state, user) {
-    state.user = user
-  }
 }

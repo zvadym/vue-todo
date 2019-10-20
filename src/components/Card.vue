@@ -26,7 +26,7 @@
           <q-btn color="grey-7" round flat icon="more_vert">
             <q-menu cover auto-close>
               <q-list>
-                <q-item clickable @click="removeCard(cardData.id)">
+                <q-item clickable @click="removeCard(card)">
                   <q-item-section>Remove Card</q-item-section>
                 </q-item>
               </q-list>
@@ -82,7 +82,7 @@ import _ from 'lodash-es'
 export default {
   name: 'Card',
   props: {
-    cardData: [Object]
+    card: [Object]
   },
   components: {
     Item,
@@ -97,14 +97,14 @@ export default {
   computed: {
     title: {
       get() {
-        return this.cardData.title
+        return this.card.title
       },
       set(value) {
         this.newTitle = value
       }
     },
     items: function() {
-      return _.orderBy(this.cardData.items, 'order', 'asc')
+      return _.orderBy(this.card.items, 'order', 'asc')
     },
     activeItems: {
       get() {
@@ -112,7 +112,7 @@ export default {
       },
       set(value) {
         this.updateOrder({
-          card: _.cloneDeep(this.cardData),
+          card: _.cloneDeep(this.card),
           orderedIds: value.map(item => item.id)
         })
       }
@@ -124,22 +124,22 @@ export default {
   watch: {
     editTitle: function(isEditMode) {
       if (!isEditMode) {
-        this.updateCardData({ ...this.cardData, title: this.newTitle })
+        this.updateCardData({ ...this.card, title: this.newTitle })
       }
     }
   },
   methods: {
     ...mapActions({
-      storeAdd: 'addItem',
-      storeUpdate: 'updateItem',
-      storeDelete: 'deleteItem',
-      updateOrder: 'updateItemsOrder',
-      updateCardData: 'updateCard',
-      removeCard: 'removeCard'
+      storeAdd: 'todo/addItem',
+      storeUpdate: 'todo/updateItem',
+      storeDelete: 'todo/deleteItem',
+      updateOrder: 'todo/updateItemsOrder',
+      updateCardData: 'todo/updateCard',
+      removeCard: 'todo/removeCard'
     }),
     addItem: function(event) {
       this.storeAdd({
-        card: _.cloneDeep(this.cardData),
+        card: _.cloneDeep(this.card),
         itemData: {
           title: event.target.value
         }
@@ -147,7 +147,7 @@ export default {
     },
     updateItemTitle: function(id, value) {
       this.storeUpdate({
-        card: _.cloneDeep(this.cardData),
+        card: _.cloneDeep(this.card),
         item: {
           ...this.items.find(item => item.id === id),
           title: value
@@ -158,7 +158,7 @@ export default {
       const item = this.items.find(item => item.id === id)
       const lastItem = _.last(item.done ? this.activeItems : this.doneItems)
       this.storeUpdate({
-        card: _.cloneDeep(this.cardData),
+        card: _.cloneDeep(this.card),
         item: {
           ...item,
           done: !item.done,
@@ -168,7 +168,7 @@ export default {
     },
     deleteItem: function(id) {
       this.storeDelete({
-        card: _.cloneDeep(this.cardData),
+        card: _.cloneDeep(this.card),
         deleteItemId: id
       })
     }

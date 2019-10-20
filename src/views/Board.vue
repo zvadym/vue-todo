@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md row items-start q-gutter-md">
-      <Card v-for="card in cards" :cardData="card" :key="card.id" />
+      <Card v-for="card in cards" :card="card" :key="card.id" />
     </div>
     <q-btn
       round
@@ -27,10 +27,13 @@ export default {
     Card
   },
   computed: {
-    ...mapState(['cards'])
+    ...mapState('todo', ['cards'])
   },
   methods: {
-    ...mapActions(['createCard', 'firebaseBindCards'])
+    ...mapActions({
+      createCard: 'todo/createCard',
+      firebaseBindCards: 'todo/firebaseBindCards'
+    })
   },
   mounted: function() {
     // firebase sync

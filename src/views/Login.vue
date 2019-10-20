@@ -3,7 +3,7 @@
     <q-card-section>
       <div class="text-h6">Sign in</div>
       <div class="text-subtitle2">
-        please provide your data to be able to use TODO app
+        Please provide your data to be able to use TODO app
       </div>
     </q-card-section>
 
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import firebase from '@/services/firebase'
+import firebase from '@/services/firebase/index'
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 import { mapActions } from 'vuex'
@@ -37,11 +37,12 @@ export default {
   },
   created() {
     firebase.auth().onAuthStateChanged(user => {
+      console.log('user', user)
       this.setUser(user)
     })
   },
   methods: {
-    ...mapActions(['setUser'])
+    ...mapActions({ setUser: 'users/setUser' })
   }
 }
 </script>

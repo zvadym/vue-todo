@@ -3,7 +3,7 @@ import App from '@/App'
 import router from '@/router'
 import store from '@/store/index'
 
-import '@/services/firebase'
+import '@/services/firebase/index'
 import '@/registerServiceWorker'
 import '@/quasar'
 
