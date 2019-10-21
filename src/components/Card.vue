@@ -54,11 +54,13 @@
 
       <q-item>
         <q-item-section side>&nbsp;</q-item-section>
-        <q-input borderless placeholder="Add item" @change="addItem">
-          <template v-slot:prepend>
-            <q-icon disable name="add" class="q-ml-lg q-mr-sm" />
-          </template>
-        </q-input>
+        <q-item-section>
+          <q-input borderless placeholder="Add item" @change="addItem">
+            <template v-slot:prepend>
+              <q-icon disable name="add" class="q-ml-lg q-mr-sm" />
+            </template>
+          </q-input>
+        </q-item-section>
       </q-item>
     </q-list>
     <q-list>
