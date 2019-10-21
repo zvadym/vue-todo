@@ -3,6 +3,7 @@
     <q-header elevated class="q-pa-sm">
       <q-toolbar>
         <q-toolbar-title>Vue TODO app</q-toolbar-title>
+        <NetworkWatcher class="q-mr-lg" />
         <UserInfo />
       </q-toolbar>
     </q-header>
@@ -15,13 +16,16 @@
 
 <script>
 import UserInfo from '@/components/UserInfo.vue'
+import NetworkWatcher from '@/components/NetworkWatcher.vue'
+
 export default {
   name: 'LayoutDefault',
   data() {
     return {}
   },
   components: {
-    UserInfo
+    UserInfo,
+    NetworkWatcher
   }
 }
 </script>
