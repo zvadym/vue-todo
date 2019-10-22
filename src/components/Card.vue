@@ -37,25 +37,25 @@
     </q-card-section>
     <q-list dense bordered padding>
       <draggable
-        v-model="activeItems"
+        v-model="activeTasks"
         handle=".drag"
         animation="150"
         ghost-class="ghost"
       >
-        <Item
-          v-for="item in activeItems"
-          :key="item.id"
-          :item="item"
-          @updateTitle="updateItemTitle"
-          @updateStatus="changeItemStatus"
-          @remove="deleteItem"
+        <Task
+          v-for="task in activeTasks"
+          :key="task.id"
+          :task="task"
+          @updateTitle="updateTaskTitle"
+          @updateStatus="changeTaskStatus"
+          @remove="deleteTask"
         />
       </draggable>
 
       <q-item>
         <q-item-section side>&nbsp;</q-item-section>
         <q-item-section>
-          <q-input borderless placeholder="Add item" @change="addItem">
+          <q-input borderless placeholder="Add task" @change="addTask">
             <template v-slot:prepend>
               <q-icon disable name="add" class="q-ml-lg q-mr-sm" />
             </template>
@@ -64,12 +64,12 @@
       </q-item>
     </q-list>
     <q-list>
-      <Item
-        v-for="item in doneItems"
-        :key="item.id"
-        :item="item"
-        @updateStatus="changeItemStatus"
-        @remove="deleteItem"
+      <Task
+        v-for="task in doneTasks"
+        :key="task.id"
+        :task="task"
+        @updateStatus="changeTaskStatus"
+        @remove="deleteTask"
       />
     </q-list>
   </q-card>
@@ -77,7 +77,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import Item from '@/components/Item'
+import Task from '@/components/Task'
 import draggable from 'vuedraggable'
 import _ from 'lodash-es'
 
@@ -87,7 +87,7 @@ export default {
     card: [Object]
   },
   components: {
-    Item,
+    Task,
     draggable
   },
   data() {
@@ -105,22 +105,22 @@ export default {
         this.newTitle = value
       }
     },
-    items: function() {
-      return _.orderBy(this.card.items, 'order', 'asc')
+    tasks: function() {
+      return _.orderBy(this.card.tasks, 'order', 'asc')
     },
-    activeItems: {
+    activeTasks: {
       get() {
-        return this.items.filter(item => !item.done)
+        return this.tasks.filter(task => !task.done)
       },
       set(value) {
         this.updateOrder({
           card: _.cloneDeep(this.card),
-          orderedIds: value.map(item => item.id)
+          orderedIds: value.map(task => task.id)
         })
       }
     },
-    doneItems: function() {
-      return this.items.filter(item => item.done)
+    doneTasks: function() {
+      return this.tasks.filter(task => task.done)
     }
   },
   watch: {
@@ -132,46 +132,46 @@ export default {
   },
   methods: {
     ...mapActions({
-      storeAdd: 'todo/addItem',
-      storeUpdate: 'todo/updateItem',
-      storeDelete: 'todo/deleteItem',
-      updateOrder: 'todo/updateItemsOrder',
+      storeAdd: 'todo/addTask',
+      storeUpdate: 'todo/updateTask',
+      storeDelete: 'todo/deleteTask',
+      updateOrder: 'todo/updateTasksOrder',
       updateCardData: 'todo/updateCard',
       removeCard: 'todo/removeCard'
     }),
-    addItem: function(event) {
+    addTask: function(event) {
       this.storeAdd({
         card: _.cloneDeep(this.card),
-        itemData: {
+        taskData: {
           title: event.target.value
         }
       })
     },
-    updateItemTitle: function(id, value) {
+    updateTaskTitle: function(id, value) {
       this.storeUpdate({
         card: _.cloneDeep(this.card),
-        item: {
-          ...this.items.find(item => item.id === id),
+        task: {
+          ...this.tasks.find(task => task.id === id),
           title: value
         }
       })
     },
-    changeItemStatus: function(id) {
-      const item = this.items.find(item => item.id === id)
-      const lastItem = _.last(item.done ? this.activeItems : this.doneItems)
+    changeTaskStatus: function(id) {
+      const task = this.tasks.find(task => task.id === id)
+      const lastTask = _.last(task.done ? this.activeTasks : this.doneTasks)
       this.storeUpdate({
         card: _.cloneDeep(this.card),
-        item: {
-          ...item,
-          done: !item.done,
-          order: lastItem ? lastItem.order + 1 : 1
+        task: {
+          ...task,
+          done: !task.done,
+          order: lastTask ? lastTask.order + 1 : 1
         }
       })
     },
-    deleteItem: function(id) {
+    deleteTask: function(id) {
       this.storeDelete({
         card: _.cloneDeep(this.card),
-        deleteItemId: id
+        deleteTaskId: id
       })
     }
   }

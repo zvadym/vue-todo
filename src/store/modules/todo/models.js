@@ -27,7 +27,7 @@ class BaseModel {
 }
 export class CardModel extends BaseModel {
   fields() {
-    return ['id', 'title', 'owner', 'items', 'createdAt']
+    return ['id', 'title', 'owner', 'tasks', 'createdAt']
   }
 
   defaults() {
@@ -35,13 +35,13 @@ export class CardModel extends BaseModel {
       id: this.guid(),
       title: 'New TODO',
       owner: null,
-      items: [],
+      tasks: [],
       createdAt: Date.now()
     }
   }
 }
 
-export class ItemModel extends BaseModel {
+export class TaskModel extends BaseModel {
   fields() {
     return ['id', 'title', 'done', 'order']
   }

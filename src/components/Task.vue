@@ -1,20 +1,20 @@
 <template>
   <q-item>
     <q-item-section side>
-      <q-icon v-if="!item.done" name="drag_indicator" class="drag" />
+      <q-icon v-if="!task.done" name="drag_indicator" class="drag" />
       <div v-else class="q-mr-lg" />
     </q-item-section>
     <q-item-section side>
       <q-checkbox
         @input="changeStatus"
-        :value="item.done"
-        :checked="item.done"
+        :value="task.done"
+        :checked="task.done"
       />
     </q-item-section>
     <q-item-section>
-      <q-input v-if="!item.done" borderless v-model="title" />
+      <q-input v-if="!task.done" borderless v-model="title" />
       <label v-else>
-        <del>{{ item.title }}</del>
+        <del>{{ task.title }}</del>
       </label>
     </q-item-section>
     <q-item-section side>
@@ -25,26 +25,26 @@
 
 <script>
 export default {
-  name: 'Item',
+  name: 'Task',
   props: {
-    item: [Object]
+    task: [Object]
   },
   computed: {
     title: {
       get() {
-        return this.item.title
+        return this.task.title
       },
       set(value) {
-        this.$emit('updateTitle', this.item.id, value)
+        this.$emit('updateTitle', this.task.id, value)
       }
     }
   },
   methods: {
     changeStatus() {
-      this.$emit('updateStatus', this.item.id)
+      this.$emit('updateStatus', this.task.id)
     },
     remove() {
-      this.$emit('remove', this.item.id)
+      this.$emit('remove', this.task.id)
     }
   }
 }

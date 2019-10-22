@@ -38,5 +38,5 @@ export default new Vuex.Store({
       state.online = !!isOnline
     }
   },
-  plugins: [vuexLocal.plugin] // TODO: do no apply for 'cards' (use modules?)
+  plugins: [vuexLocal.plugin]
 })

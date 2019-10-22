@@ -1,8 +1,8 @@
 import Vue from 'vue'
 
-export const ADD_ITEM = 'ADD_ITEM'
-export const UPDATE_ITEM = 'UPDATE_ITEM'
-export const DELETE_ITEM = 'DELETE_ITEM'
+export const ADD_TASK = 'ADD_TASK'
+export const UPDATE_TASK = 'UPDATE_TASK'
+export const DELETE_TASK = 'DELETE_TASK'
 
 export const ADD_CARD = 'ADD_CARD'
 export const UPDATE_CARD = 'UPDATE_CARD'
@@ -17,26 +17,26 @@ const cardMutations = {
     Vue.set(state.cards, state.cards.findIndex(x => x.id == card.id), card)
   },
   [DELETE_CARD](state, id) {
-    state.cards = state.cards.filter(item => item.id !== id)
+    state.cards = state.cards.filter(task => task.id !== id)
   }
 }
 
 // eslint-disable-next-line
-const itemMutations = {
-  [ADD_ITEM](state, { card, item }) {
-    card.items.push(item)
+const taskMutations = {
+  [ADD_TASK](state, { card, task }) {
+    card.tasks.push(task)
   },
-  [UPDATE_ITEM](state, { card, item }) {
-    Vue.set(card.items, card.items.findIndex(x => x.id == item.id), item)
+  [UPDATE_TASK](state, { card, task }) {
+    Vue.set(card.tasks, card.tasks.findIndex(x => x.id == task.id), task)
   },
-  [DELETE_ITEM](state, { card, item }) {
-    card.items = card.items.filter(o => o.id !== item.id)
+  [DELETE_TASK](state, { card, task }) {
+    card.tasks = card.tasks.filter(o => o.id !== task.id)
   }
 }
 
 export default {
-  // All card/item mutations are switched off.
+  // All card/task mutations are switched off.
   // Vuexfire used instead
   // ...cardMutations,
-  // ...itemMutations,
+  // ...taskMutations,
 }

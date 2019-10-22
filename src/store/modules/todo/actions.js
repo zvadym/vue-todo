@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { CardModel, ItemModel } from './models'
+import { CardModel, TaskModel } from './models'
 import firebaseActions from '@/services/firebase/actions'
 
 const cardActions = {
@@ -19,31 +19,31 @@ const cardActions = {
   }
 }
 
-const itemActions = {
-  addItem({ dispatch }, { card, itemData }) {
-    card.items.push({
-      ...new ItemModel({
-        ...itemData,
-        order: card.items.length + 1
+const taskActions = {
+  addTask({ dispatch }, { card, taskData }) {
+    card.tasks.push({
+      ...new TaskModel({
+        ...taskData,
+        order: card.tasks.length + 1
       })
     })
     dispatch('firebaseUpdateCard', { card })
   },
-  updateItem({ dispatch }, { card, item }) {
-    Vue.set(card.items, card.items.findIndex(x => x.id == item.id), item)
+  updateTask({ dispatch }, { card, task }) {
+    Vue.set(card.tasks, card.tasks.findIndex(x => x.id == task.id), task)
     dispatch('firebaseUpdateCard', { card })
   },
-  updateItemsOrder({ dispatch }, { card, orderedIds }) {
-    card.items = card.items.map(item => {
+  updateTasksOrder({ dispatch }, { card, orderedIds }) {
+    card.tasks = card.tasks.map(task => {
       return {
-        ...item,
-        order: orderedIds.indexOf(item.id)
+        ...task,
+        order: orderedIds.indexOf(task.id)
       }
     })
     dispatch('firebaseUpdateCard', { card })
   },
-  deleteItem({ dispatch }, { card, deleteItemId }) {
-    card.items = card.items.filter(o => o.id !== deleteItemId)
+  deleteTask({ dispatch }, { card, deleteTaskId }) {
+    card.tasks = card.tasks.filter(o => o.id !== deleteTaskId)
     dispatch('firebaseUpdateCard', { card })
   }
 }
@@ -51,5 +51,5 @@ const itemActions = {
 export default {
   ...firebaseActions,
   ...cardActions,
-  ...itemActions
+  ...taskActions
 }

@@ -1,5 +1,5 @@
 import { firestoreAction } from 'vuexfire'
-import { CardModel, ItemModel } from '@/store/modules/todo/models'
+import { CardModel, TaskModel } from '@/store/modules/todo/models'
 import { cardsRef } from './index'
 
 export default {
@@ -22,8 +22,8 @@ export default {
             ...new CardModel({
               ...data,
               id: snapshot.id,
-              items: data.items.map(item => {
-                return { ...new ItemModel({ ...item }) }
+              tasks: data.tasks.map(task => {
+                return { ...new TaskModel({ ...task }) }
               })
             })
           }
