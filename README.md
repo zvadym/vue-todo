@@ -20,3 +20,8 @@ This app is PWA, it means that you can install it to your browser
 and use even when you are offline.
 
 Check this [app online](https://zvadym-vue-todo.firebaseapp.com/#/)
+
+# TODO list
+
+- [ ] Unit-tests
+- [ ] `VuexPersistence` with `vuexfire` (test offline mode better)
