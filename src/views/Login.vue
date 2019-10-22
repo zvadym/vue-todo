@@ -1,18 +1,21 @@
 <template>
-  <q-card dark bordered class="bg-blue-9 q-ma-lg">
-    <q-card-section>
-      <div class="text-h6">Sign in</div>
-      <div class="text-subtitle2">
-        Please provide your data to be able to use TODO app
-      </div>
-    </q-card-section>
+  <div class="row justify-center">
+    <q-card dark bordered class="bg-grey-8 q-ma-lg col-md-4 col-sm-7 col-xs-11">
+      <q-card-section>
+        <div class="text-h6">Sign in</div>
+        <div class="text-subtitle2">
+          After login you will be able to syncronize your tasks between all your
+          devices.
+        </div>
+      </q-card-section>
 
-    <q-separator dark inset />
+      <q-separator dark inset />
 
-    <q-card-section>
-      <section id="firebaseui-auth-container"></section>
-    </q-card-section>
-  </q-card>
+      <q-card-section>
+        <section id="firebaseui-auth-container"></section>
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script>
